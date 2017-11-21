@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.lang.NumberFormatException;
 import java.util.regex.Pattern;
 
@@ -96,7 +98,7 @@ public class LogginFragment extends Fragment {
                 String s_ip = ip.getText().toString();
                 //Valido la dirección IP
                 if(!PATTERN.matcher(s_ip).matches()){
-                    s_ip = "127.0.0.1"; //Dirección por defecto.
+                    s_ip = "192.168.0.19"; //Dirección por defecto.
                 }
                 Log.e("ippppppppppp", "P: "+s_ip);
 
@@ -107,7 +109,7 @@ public class LogginFragment extends Fragment {
                 try {
                     port2 = Short.parseShort(s_port);
                 } catch (java.lang.NumberFormatException ex) {
-                    port2 = 6000; //Puerto por defecto
+                    port2 = 8080; //Puerto por defecto
                 }
                 ConnectionUserData data = new ConnectionUserData(
                         s_user, s_pass, s_ip, port2
@@ -182,7 +184,14 @@ public class LogginFragment extends Fragment {
                         //Crear cookie de sesión.
                         //Pasar actividad si esta correcto.
 
-                    resul = "OK";
+                    PeticionPost peti = new PeticionPost();
+
+                    String re = peti.autentica();
+                    Log.e("AnDomus","Se ha establecido conexión, respuesta "+re);
+                    //Analizar respuesta
+
+
+                    resul = "OK"; //Si se ha recibido correctamente
                 }
             }
 
