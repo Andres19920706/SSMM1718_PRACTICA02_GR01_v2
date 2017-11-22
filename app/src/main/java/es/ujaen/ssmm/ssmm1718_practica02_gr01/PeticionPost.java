@@ -161,14 +161,14 @@ public class PeticionPost extends MetodosConnect {
                 try{
                     conect= (HttpURLConnection) url.openConnection(); /** Instnaica de tipo HttpURLConnection */
                     // java.net.ConnectException: failed to connect to /192.168.0.19 (port 8080) after 90000ms: isConnected failed: EHOSTUNREACH (No route to host)
-
+                    conect.setConnectTimeout(7000); //set the timeout in milliseconds
                 }catch(ConnectException e ){
                     Log.e("AnDomus","Conexión errónea "+e);
                     response = "Error al establecer la conexión 1";
-                }catch(IOException e){
+                }catch(java.net.SocketTimeoutException e){
                     Log.e("AnDomus","Conexión errónea "+e);
                     response = "Error an la conexión 2";
-                }
+                }catch(exceipti)
 
                 if(conect != null){
                     //Si se puede establcer una conexion
