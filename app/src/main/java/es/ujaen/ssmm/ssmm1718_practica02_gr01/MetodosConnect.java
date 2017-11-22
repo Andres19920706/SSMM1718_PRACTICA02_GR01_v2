@@ -11,4 +11,10 @@ public abstract class MetodosConnect {
      * @return String
      */
     public abstract String autentica ();
+
+    /*
+     * El resto de métodos  aún no están contemplados:
+     *      - Cierre de sesión
+     *     - Petición básica del cliente.
+     */
 }

@@ -100,7 +100,7 @@ public class LogginFragment extends Fragment {
                 if(!PATTERN.matcher(s_ip).matches()){
                     s_ip = "192.168.0.19"; //Dirección por defecto.
                 }
-                Log.e("ippppppppppp", "P: "+s_ip);
+                Log.e("direccionIP", "AnDomus: Direccion IP- "+s_ip);
 
                 //Estragio el puerto
                 String s_port = port.getText().toString();
