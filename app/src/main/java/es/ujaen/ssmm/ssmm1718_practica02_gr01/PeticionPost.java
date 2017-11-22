@@ -37,6 +37,8 @@ public class PeticionPost extends MetodosConnect {
     public static final String PROTOCOL = "http";
         //Nombre de la máquina servidora
     public static final String NAMEHOST = "ssmm1718_practica02_gr01_servidor";
+        //Tiempo en ms, que espera el cliente a que el servidor acepte la petición
+    public static final int TIMECONNECT = 1; //ms
         //Método de petición
     public static final String METODO[] = {"POST","GET"};
         //Recurso solicitado
@@ -159,19 +161,23 @@ public class PeticionPost extends MetodosConnect {
             if (url != null) {
                 //Si no hay error al instanciar la URL
                 try{
+
                     conect= (HttpURLConnection) url.openConnection(); /** Instnaica de tipo HttpURLConnection */
                     // java.net.ConnectException: failed to connect to /192.168.0.19 (port 8080) after 90000ms: isConnected failed: EHOSTUNREACH (No route to host)
-                    conect.setConnectTimeout(7000); //set the timeout in milliseconds
+                    conect.setConnectTimeout(TIMECONNECT); //Tiempo de espera para establecer la conexion en ms
                 }catch(ConnectException e ){
                     Log.e("AnDomus","Conexión errónea "+e);
                     response = "Error al establecer la conexión 1";
                 }catch(java.net.SocketTimeoutException e){
                     Log.e("AnDomus","Conexión errónea "+e);
-                    response = "Error an la conexión 2";
-                }catch(exceipti)
+                    response = ERRORTYPE2[0];
+                }catch(IOException e){
+
+                }
 
                 if(conect != null){
                     //Si se puede establcer una conexion
+                    Log.e("AnDomus","Establezco conexion ");
                     conect.setDoOutput(true);//Especificamos que vamos a escribir.
                     conect.setInstanceFollowRedirects(false);//En caso de recibir una respuesta con el código 3xx, no redireccionamos. (Por defecto es true)
                     try {
