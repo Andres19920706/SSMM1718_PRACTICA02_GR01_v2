@@ -38,7 +38,7 @@ public class PeticionPost extends MetodosConnect {
         //Nombre de la máquina servidora
     public static final String NAMEHOST = "ssmm1718_practica02_gr01_servidor";
         //Tiempo en ms, que espera el cliente a que el servidor acepte la petición
-    public static final int TIMECONNECT = 1; //ms
+    public static final int TIMECONNECT = 7000; //ms
         //Método de petición
     public static final String METODO[] = {"POST","GET"};
         //Recurso solicitado
@@ -59,7 +59,8 @@ public class PeticionPost extends MetodosConnect {
         //Recurso por defecto (loggin)
         //"http://192.168.0.19:8080/ssmm1718_practica02_gr01_servidor/"
         //"http://192.168.0.19:8080/ssmm1718_practica02_gr01_servidor/"
-        this.request = "http://192.168.0.19:8080/ssmm1718_practica02_gr01_servidor/";
+        //"http://www4.ujaen.es/~jccuevas/ssmm/login.php" //http://www4.ujaen.es/~jccuevas/ssmm/login.php?user=An&pass=13
+        this.request ="http://10.82.125.108:8080/ssmm1718_practica02_gr01_servidor/";
         this.parametros="usuario=Andres&clave=123";
     }
 
@@ -164,20 +165,19 @@ public class PeticionPost extends MetodosConnect {
 
                     conect= (HttpURLConnection) url.openConnection(); /** Instnaica de tipo HttpURLConnection */
                     // java.net.ConnectException: failed to connect to /192.168.0.19 (port 8080) after 90000ms: isConnected failed: EHOSTUNREACH (No route to host)
-                    conect.setConnectTimeout(TIMECONNECT); //Tiempo de espera para establecer la conexion en ms
                 }catch(ConnectException e ){
                     Log.e("AnDomus","Conexión errónea "+e);
                     response = "Error al establecer la conexión 1";
-                }catch(java.net.SocketTimeoutException e){
-                    Log.e("AnDomus","Conexión errónea "+e);
-                    response = ERRORTYPE2[0];
+                    conect = null;
                 }catch(IOException e){
-
+                    Log.e("AnDomus","Conexión errónea "+e);
+                    response = "Error al establecer la conexión 2";
+                    conect = null;
                 }
 
-                if(conect != null){
-                    //Si se puede establcer una conexion
-                    Log.e("AnDomus","Establezco conexion ");
+                while(conect != null){//Si se puede establcer una conexion
+                    //Establecemos el tiempo de conexion
+                    conect.setConnectTimeout(TIMECONNECT);
                     conect.setDoOutput(true);//Especificamos que vamos a escribir.
                     conect.setInstanceFollowRedirects(false);//En caso de recibir una respuesta con el código 3xx, no redireccionamos. (Por defecto es true)
                     try {
@@ -186,10 +186,15 @@ public class PeticionPost extends MetodosConnect {
                     } catch (ProtocolException e) {
                         e.printStackTrace();
                         Log.e("AnDomus","Error al establcer el protocolo"+e);
-                        response = "Error al establecer el protoclo";
+                        response = "Error al establecer el protocolo";
+                        conect = null;
                     }
 
+//                    if(conect!=null){
+//
+//                    }
                     //Definimos las propiedades de la petción
+
                     conect.setRequestProperty("Content-Type","application/x-www-form-urlencoded");//Tipo de contenido.
                     conect.setRequestProperty("charset","UTF-8");//Codificación.
                     conect.setRequestProperty("Conent-length", Integer.toString(msg.length));//Longitud del contenido.
@@ -212,25 +217,28 @@ public class PeticionPost extends MetodosConnect {
                         }
                         while(j>=0);//Salimos cuando no haya mas caracteres.
 
-                    } catch (IOException e) {
+                    }catch (IOException e) {
                         e.printStackTrace();
                         Log.e("AnDomus","Obteniendo o Enviando los parametros "+e);
                         response = "Error al enviar o recibir datos";
+                        conect=null;
                     }finally{
                         //Cerramos
                         try {
                             out.close();
                             in.close();
+                            conect.disconnect();
+                            conect=null;
                         } catch (IOException e) {
                             e.printStackTrace();
                             Log.e("AnDomus","Cerrando los objetos de write y read "+e);
                             response = "Error al cerrar el connector";
+                            conect=null;
                         }
                     }
                 }//Fin de connect!=null
             }//Fin de url!=null
         }//Fin de msg!=null
-
 
         return response; //Devolvemos la respuesta.
     }

@@ -187,8 +187,9 @@ public class LogginFragment extends Fragment {
                     PeticionPost peti = new PeticionPost();
 
                     String re = peti.autentica();
-                    Log.e("AnDomus","Se ha establecido conexión, respuesta "+re);
+                    Log.e("AnDomus","Se ha establecido conexión, respuesta  recibida: "+re);
                     //Analizar respuesta
+                    //Cabmiar de activdad (guardata todos datos en preferencias compartidas)
 
 
                     resul = "OK"; //Si se ha recibido correctamente
