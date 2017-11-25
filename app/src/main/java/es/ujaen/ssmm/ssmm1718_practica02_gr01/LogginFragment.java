@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.NumberFormatException;
+import java.net.SocketTimeoutException;
 import java.util.regex.Pattern;
 
 import static java.lang.String.*;
@@ -41,10 +44,24 @@ public class LogginFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final Pattern PATTERN = Pattern.compile(
             "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+    private static final short PORTDEFUAL = 8080;
+    public static SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "PreferenciasAnDomus" ;
+    public static final String SESSIONID = "sessionID";
+    public static final String SESSIONEXPIRED = "sessionExpired";
+    public static final String SHUSER = "usuario";
+    public static final String SHPASS = "clave";
+    public static final String SHIP = "direccionIP";
+    public static final String SHPORT = "puerto";
+
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private DialogoAlerta DIALOGO = null;
+    private FragmentManager FM = null;
+    private TareaAutentica TAREACONN = null;
+    private ConnectionUserData DATA = null;
     private OnFragmentInteractionListener mListener;
 
     public LogginFragment() {
@@ -76,6 +93,9 @@ public class LogginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //Obtenemos el FragmentManager para interactuar con los fragmentos asociados con la actividad de este fragmento.
+        FM = getFragmentManager();
+
     }
 
     @Override
@@ -90,34 +110,63 @@ public class LogginFragment extends Fragment {
         final EditText ip = (EditText) fragment.findViewById(R.id.editText_login_ip);
         final EditText port = (EditText) fragment.findViewById(R.id.editText_login_port);
 
+        //Comprobamos si hay datos compartidos, para facilitar el inicio de sesion
+        sharedpreferences =  getActivity().getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
+
+        user.setText(sharedpreferences.getString(SHUSER,""));
+        ip.setText(sharedpreferences.getString(SHIP,""));
+        port.setText(sharedpreferences.getString(SHPORT,""));
+
+        //Cuando se hace click sobre el boton de iniciar sesion
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)  {
+                //Extracción de datos
                 String s_user = user.getText().toString();
                 String s_pass = pass.getText().toString();
                 String s_ip = ip.getText().toString();
+                String s_port = port.getText().toString();
+
                 //Valido la dirección IP
                 if(!PATTERN.matcher(s_ip).matches()){
-                    s_ip = "192.168.0.19"; //Dirección por defecto.
+                    //Si no tiene el formato de IPv4
+                    s_ip = "";
                 }
-                Log.e("direccionIP", "AnDomus: Direccion IP- "+s_ip);
-
-                //Estragio el puerto
-                String s_port = port.getText().toString();
+                //Adaptamos el puerto
                 short port2;
-
                 try {
                     port2 = Short.parseShort(s_port);
                 } catch (java.lang.NumberFormatException ex) {
-                    port2 = 8080; //Puerto por defecto
+                    port2 = PORTDEFUAL; //Puerto por defecto
                 }
-                ConnectionUserData data = new ConnectionUserData(
-                        s_user, s_pass, s_ip, port2
-                );
 
+                //Comprobamos que los campos estén bien insertados
+                if(s_user.equalsIgnoreCase("")||s_pass.equalsIgnoreCase("")
+                        || s_ip.equalsIgnoreCase("")){
+                    //Informamos al cliente del error
+                    Log.e("AnDomus", "Campos Vacios o incorrectos ");
+                    DIALOGO = new DialogoAlerta("Campos Vacios o incorrectos.");
+                    DIALOGO.show(FM, "tagAlerta");
 
-                TareaAutentica tarea = new TareaAutentica();
-                tarea.execute(data);
+                }else {
+                    //"Encapsulamos los datos"
+                    DATA = new ConnectionUserData(
+                            s_user, s_pass, s_ip, port2
+                    );
+                    //Preferencias compartidas
+                    sharedpreferences =  getActivity().getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(SHUSER, DATA.getUser());
+                    //editor.putString(SHPASS, DATA.getPass());
+                    editor.putString(SHIP,DATA.getConnectionIP());
+                    editor.putString(SHPORT, String.valueOf(DATA.getConnectionPort()));
+                    editor.commit();
+                    //Establcemos conexión
+                    TAREACONN = new TareaAutentica();
+                    TAREACONN.execute(DATA);
+
+                }
             }
         });
 
@@ -168,61 +217,91 @@ public class LogginFragment extends Fragment {
 
     //
     public class TareaAutentica extends AsyncTask<ConnectionUserData,String,String> {
-        private ConnectionUserData data; public String doInBackground(ConnectionUserData... param){
+        private ConnectionUserData data;
+        public String doInBackground(ConnectionUserData... param) {
             String resul = "NO OK";
             if(param!=null) {
                 if (param.length >= 1) {
                     data = param[0];
-                    Log.e("o", "E" + data.getConnectionPort());
-                    publishProgress("MENSAJE RECIBIDO CORRECTAMENTE");
+                    //Log.e("AnDomus", "Los datos son " + data.getConnectionPort());
+                    publishProgress("Iniciando sesion");
                     //TODO proceso de autenticación
                     //Aqui me quedo, falta:
-                        //Insertar clase de http.
-                        //Crear servidor.
-                        //Establcer conexión con servidor.
-                        //Modificar diálogo.
-                        //Crear cookie de sesión.
-                        //Pasar actividad si esta correcto.
+                    //Insertar clase de http.
+                    //Crear servidor.
+                    //Establcer conexión con servidor.
+                    //Modificar diálogo.
+                    //Crear cookie de sesión.
+                    //Pasar actividad si esta correcto.
 
-                    PeticionPost peti = new PeticionPost();
+                    String datosLogin = "usuario="+data.getUser()+"&clave="+data.getPass();
+                    PeticionPost peti = new PeticionPost(data.getConnectionIP(),data.getConnectionPort(),datosLogin);
 
+                    Log.e("AnDomus","URL: "+peti.getDireccion());
                     String re = peti.autentica();
+                    publishProgress(""+re);
+
                     Log.e("AnDomus","Se ha establecido conexión, respuesta  recibida: "+re);
                     //Analizar respuesta
                     //Cabmiar de activdad (guardata todos datos en preferencias compartidas)
+                    if(re.split("&").length==2){
+                        //Autenticacion con exito
+                        String [] datosRespuesta = re.split("&");
+                        String sessionID = datosRespuesta[0].split("=")[1];
+                        String sessionExpired = datosRespuesta[1].split("=")[1];
+                        Log.e("comprobamos A","sessionID: "+sessionID);
+                        Log.e("comprobamos B","expired: "+sessionExpired);
+                        //Preferencias precompartidas
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(SESSIONEXPIRED, sessionExpired);
+                        editor.putString(SESSIONID, sessionID);
+                        editor.commit();
 
+                        resul = "OK"; //Si se ha recibido correctamente
+                    }
 
-                    resul = "OK"; //Si se ha recibido correctamente
                 }
             }
-
+            Log.e("AnDomus","Resultado: "+resul);
             return resul;
         }
 
         //
         protected void onProgressUpdate(String... progress) {
-            onPostExecute(progress);
-            Log.e("makemachine", "onPostExecute(): " +progress[0]);
+            //onPostExecute(progress);
             //onPostExecute(progress[0]);
+            if(!progress[0].equalsIgnoreCase("OK")) {
+                Log.e("AnDomus", "onProgressUpdate(): " + progress[0]);
+                Toast.makeText(getActivity(), "" + progress[0], Toast.LENGTH_LONG).show();
+                //Creo una instancia de dialogo
+                DIALOGO = new DialogoAlerta(progress[0]);
+                DIALOGO.show(FM, "tagAlerta");
+            }
+
 
         }
         //
-        protected void onPostExecute(String... result) {
-
-
-            Log.e("makemachine", "onPostExecute(): " + result[0]);
-            Toast.makeText( getActivity(), ""+result[0], Toast.LENGTH_LONG).show();
-            //Creo una instancia de dialogo
-            FragmentManager fragmentManager = getFragmentManager();
-            DialogoAlerta dialogo = new DialogoAlerta(result[0]);
-            dialogo.show(fragmentManager, "tagAlerta");
-
-        }
+//        protected void onPostExecute(String... result) {
+//            Log.e("AnDomus","ERES: "+result[0]);
+//            if (result[0].equalsIgnoreCase("OK")) {
+//                Log.e("AnDomus","onPostExecute(): ok");
+//                // Toast.makeText(getContext(), "OK autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
+//            }
+////            else {
+////                Log.e("AnDomus", "onPostExecute(): " + result[0]);
+////                Toast.makeText(getActivity(), "" + result[0], Toast.LENGTH_LONG).show();
+////                //Creo una instancia de dialogo
+////                DIALOGO = new DialogoAlerta(result[0]);
+////                DIALOGO.show(FM, "tagAlerta");
+////            }
+//
+//        }
         /**
         *
         * @param result OK si la operación fue correcta y si no otor valor
         */
         public void onPostExecute(String result){
+
             if(result.compareToIgnoreCase("OK")==0) {
                 //Intent nueva = new Intent(getActivity(), ServiceActivity.class);
                 //nueva.putExtra(ServiceActivity.PARAM_USER, data.getUser());
@@ -230,13 +309,22 @@ public class LogginFragment extends Fragment {
                 //nueva.putExtra("param_ip", data.getConnectionIP());
                 //nueva.putExtra("param_port", data.getConnectionPort());
                 //startActivity(nueva);
-                Log.e("o","ok");
+                Log.e("AnDomus","onPpostExecute() ok");
+//                FragmentManager fm = getFragmentManager();
+//                FragmentTransaction transaction = fm.beginTransaction();
+//                WelcomenFragment fragment = new WelcomenFragment();
+//                transaction.replace(R.id.Contenedor, fragment);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
                    // Toast.makeText(getContext(), "OK autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
                 }else
                 {
                     Log.e("o","no ok");
                     //Toast.makeText(getContext(), "Error autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
+
                 }
+
+
         }
     }
 

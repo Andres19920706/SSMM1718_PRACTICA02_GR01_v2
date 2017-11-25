@@ -1,5 +1,7 @@
 package es.ujaen.ssmm.ssmm1718_practica02_gr01;
 
+import java.net.SocketTimeoutException;
+
 /**
  * Created by Andres on 21/11/2017.
  */

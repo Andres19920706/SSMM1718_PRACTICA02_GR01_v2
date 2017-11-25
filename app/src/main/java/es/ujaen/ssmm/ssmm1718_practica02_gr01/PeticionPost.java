@@ -16,6 +16,7 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 
@@ -69,11 +70,11 @@ public class PeticionPost extends MetodosConnect {
      * @param direccionIP de tipo String
      * @param port de tipo Short
      * @param datos de tipo String
-     * @param idRecurso de tipo Short
+     *
      */
-    public PeticionPost(String direccionIP,short port,String datos,short idRecurso){
+    public PeticionPost(String direccionIP,short port,String datos){
 
-        this.request =this.PROTOCOL+"://"+direccionIP+":"+port+"/"+this.NAMEHOST+this.RECURSO[idRecurso];
+        this.request =this.PROTOCOL+"://"+direccionIP+":"+port+"/"+this.NAMEHOST;
         this.parametros=datos;
     }
 
@@ -152,7 +153,7 @@ public class PeticionPost extends MetodosConnect {
         if(msg!=null) {
             //Si no hay error al converitr los paramétos a enviar.
             try {
-                url = new URL(request);
+                url = new URL(request+this.RECURSO[0]);
 
             } catch (MalformedURLException e) {
                 Log.e("AnDomus", "La URL no es valida, tipo de excepcion " + e);
@@ -203,6 +204,7 @@ public class PeticionPost extends MetodosConnect {
                     //Preparamos el flujo de datos.
                     try {
                         out = new  DataOutputStream(conect.getOutputStream());
+                        Log.e("DDDDDDDDD","DATOSOSOSOS: "+this.parametros);
                         out.write(msg);
                         out.flush();
 
@@ -217,7 +219,13 @@ public class PeticionPost extends MetodosConnect {
                         }
                         while(j>=0);//Salimos cuando no haya mas caracteres.
 
-                    }catch (IOException e) {
+                    }catch(SocketTimeoutException e){
+                        e.printStackTrace();
+                        Log.e("AnDomus","Time agotado"+e);
+                        response = "Error al enviar o recibir datos 1";
+                        conect=null;
+                    }
+                    catch (IOException e) {
                         e.printStackTrace();
                         Log.e("AnDomus","Obteniendo o Enviando los parametros "+e);
                         response = "Error al enviar o recibir datos";
@@ -228,8 +236,8 @@ public class PeticionPost extends MetodosConnect {
                             out.close();
                             in.close();
                             conect.disconnect();
-                            conect=null;
-                        } catch (IOException e) {
+                            conect = null;
+                        }catch (Exception e) {
                             e.printStackTrace();
                             Log.e("AnDomus","Cerrando los objetos de write y read "+e);
                             response = "Error al cerrar el connector";
