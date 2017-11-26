@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_cerrarSesion) {
             //Obtenemos los datos precompartidos
             SharedPreferences sharedpreferences = getSharedPreferences(this.MyPREFERENCES, Context.MODE_PRIVATE);
             //Obtenmos el identficiador de sesion
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_loggin) {
             // Handle the camera action
             Log.e("AnDomus","Cargando fragmento de bienvenida");
             LogginFragment fragment = new LogginFragment();
@@ -179,7 +181,12 @@ public class MainActivity extends AppCompatActivity
                 transaction.commit();
             }else{
                 //Cambiamos de actidad
-                Log.e("AnDomus","Cambiar de actiidad");
+                FragmentManager fm = getFragmentManager();
+                //Mostramos un cuadro de diálogo
+                Toast.makeText(this, "Sesion ya iniciada", Toast.LENGTH_LONG).show();
+                //Cambiamos a la actividad 2
+                Intent nueva = new Intent(this, ServiceActivity.class);
+                startActivity(nueva);
             }
 
         } else if (id == R.id.nav_gallery) {

@@ -22,7 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data  android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCl1yGPZ3mpxxxxxxxAz2R-t7zcWVzrHUL9k"/>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCl1yGPZ3mpxxxxxxxAz2R-t7zcWVzrHUL9k" />
+
+        <activity android:name=".ServiceActivity"></activity>
     </application>
 
 </manifest>

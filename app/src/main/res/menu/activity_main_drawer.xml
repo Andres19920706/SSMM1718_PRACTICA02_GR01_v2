@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_loggin"
             android:icon="@drawable/ic_menu_send"
             android:title="Iniciar Sesión" />
         <item

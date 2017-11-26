@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -227,11 +228,6 @@ public class LogginFragment extends Fragment {
                     publishProgress("Iniciando sesion");
                     //TODO proceso de autenticación
                     //Aqui me quedo, falta:
-                    //Insertar clase de http.
-                    //Crear servidor.
-                    //Establcer conexión con servidor.
-                    //Modificar diálogo.
-                    //Crear cookie de sesión.
                     //Pasar actividad si esta correcto.
 
                     String datosLogin = "usuario="+data.getUser()+"&clave="+data.getPass();
@@ -271,8 +267,6 @@ public class LogginFragment extends Fragment {
             //onPostExecute(progress);
             //onPostExecute(progress[0]);
             if(!progress[0].equalsIgnoreCase("OK")) {
-                Log.e("AnDomus", "onProgressUpdate(): " + progress[0]);
-                Toast.makeText(getActivity(), "" + progress[0], Toast.LENGTH_LONG).show();
                 //Creo una instancia de dialogo
                 DIALOGO = new DialogoAlerta(progress[0]);
                 DIALOGO.show(FM, "tagAlerta");
@@ -280,22 +274,6 @@ public class LogginFragment extends Fragment {
 
 
         }
-        //
-//        protected void onPostExecute(String... result) {
-//            Log.e("AnDomus","ERES: "+result[0]);
-//            if (result[0].equalsIgnoreCase("OK")) {
-//                Log.e("AnDomus","onPostExecute(): ok");
-//                // Toast.makeText(getContext(), "OK autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
-//            }
-////            else {
-////                Log.e("AnDomus", "onPostExecute(): " + result[0]);
-////                Toast.makeText(getActivity(), "" + result[0], Toast.LENGTH_LONG).show();
-////                //Creo una instancia de dialogo
-////                DIALOGO = new DialogoAlerta(result[0]);
-////                DIALOGO.show(FM, "tagAlerta");
-////            }
-//
-//        }
         /**
         *
         * @param result OK si la operación fue correcta y si no otor valor
@@ -303,28 +281,16 @@ public class LogginFragment extends Fragment {
         public void onPostExecute(String result){
 
             if(result.compareToIgnoreCase("OK")==0) {
-                //Intent nueva = new Intent(getActivity(), ServiceActivity.class);
-                //nueva.putExtra(ServiceActivity.PARAM_USER, data.getUser());
-                //nueva.putExtra("param_pass", data.getPass());
-                //nueva.putExtra("param_ip", data.getConnectionIP());
-                //nueva.putExtra("param_port", data.getConnectionPort());
-                //startActivity(nueva);
+                Intent nueva = new Intent(getActivity(), ServiceActivity.class);
+//                Paso de datos a la otra actividad.
+//                nueva.putExtra(SHUSER, data.getUser());
+//                nueva.putExtra(SHPASS, data.getPass());
+//                nueva.putExtra(SHIP, data.getConnectionIP());
+//                nueva.putExtra(SHPORT,data.getConnectionPort());
+                startActivity(nueva);
                 Log.e("AnDomus","onPpostExecute() ok");
-//                FragmentManager fm = getFragmentManager();
-//                FragmentTransaction transaction = fm.beginTransaction();
-//                WelcomenFragment fragment = new WelcomenFragment();
-//                transaction.replace(R.id.Contenedor, fragment);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-                   // Toast.makeText(getContext(), "OK autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
-                }else
-                {
-                    Log.e("o","no ok");
-                    //Toast.makeText(getContext(), "Error autenticando a " +data.getUser(), Toast.LENGTH_LONG).show();
 
-                }
-
-
+            }
         }
     }
 

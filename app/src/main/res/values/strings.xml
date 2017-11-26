@@ -1,20 +1,25 @@
 <resources>
-    <string name="app_name">SSMM1718_PRACTICA02_GR01</string>
+    <string name="app_name">AnDomus</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Cerrar Sesion</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_blank_fragment2">Hello blank fragment Heeeeee </string>
+    <string name="fragment_service_date">SERVICIO DE ON-OFF</string>
+    <string name="hello_blank_fragment2">SERVICIO DE ON-OFF </string>
     <string name="fragment_login_title">ANDOMUS</string>
     <string name="fragment_login_description">Inicie sesión, para actuar sobre sus dispositivos.</string>
     <string name="fragment_login_user">Usuario:</string>
     <string name="fragment_login_pass">Pass:</string>
-    <string name="fragment_login_ip">Dirección:</string>
+    <string name="fragment_login_ip">Direccion:</string>
     <string name="fragment_login_port">Puerto:</string>
     <string name="fragment_login_button">Iniciar Sesión</string>
+
+    <!-- String de Fragement Welcoment -->
+    <string name="tituleWelcomen">Bienvenido </string>
+    <string name="descripcionWelcomen">AnDomus, un paso hacie el futuro.</string>
+
 
 </resources>
