@@ -19,7 +19,9 @@
 
     <!-- String de Fragement Welcoment -->
     <string name="tituleWelcomen">Bienvenido </string>
-    <string name="descripcionWelcomen">AnDomus, un paso hacie el futuro.</string>
+    <string name="descripcionWelcomen">Un paso hacia el futuro.</string>
+    <string name="titule_welcome">Bienvenido a AnDomus.</string>
+    <string name="description_welcome">Al alcance de un solo click</string>
 
 
 </resources>

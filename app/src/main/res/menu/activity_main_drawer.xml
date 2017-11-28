@@ -26,12 +26,12 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:icon="?android:attr/actionModeCopyDrawable"
+                android:title="Copyright" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="Acerca de" />
         </menu>
     </item>
 

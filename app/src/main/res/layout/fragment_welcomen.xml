@@ -9,11 +9,38 @@
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/fondoprincipal">
+
         <TextView
+            android:id="@+id/titule_welcome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/tituleWelcomen" />
+            android:layout_marginTop="50dp"
+            android:text="@string/titule_welcome"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/description_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/titule_welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:text="@string/descripcionWelcomen"
+            android:textColor="@android:color/background_light" />
+
+        <ImageView
+            android:id="@+id/logo_welcome"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="144dp"
+            android:src="@mipmap/andomus_logo" />
 
 
     </RelativeLayout>
