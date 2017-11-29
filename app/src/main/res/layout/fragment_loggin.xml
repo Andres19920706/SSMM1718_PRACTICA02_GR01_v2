@@ -23,7 +23,7 @@
                 android:layout_height="25dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
-                android:src="@mipmap/andomus_letras" />
+                android:src="@drawable/ic_andomus_letras" />
         </LinearLayout>
 
         <TextView
