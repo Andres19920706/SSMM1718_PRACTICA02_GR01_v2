@@ -145,8 +145,11 @@ public class LogginFragment extends Fragment {
                 if(s_user.equalsIgnoreCase("")||s_pass.equalsIgnoreCase("")
                         || s_ip.equalsIgnoreCase("")){
                     //Informamos al cliente del error
-                    Log.e("AnDomus", "Campos Vacios o incorrectos ");
-                    DIALOGO = new DialogoAlerta("Campos Vacios o incorrectos.");
+                    if(s_ip.equalsIgnoreCase("")){
+                        DIALOGO = new DialogoAlerta("IP errónea.");
+                    }else{
+                        Log.e("AnDomus", "Campos Vacios o incorrectos ");
+                    }
                     DIALOGO.show(FM, "tagAlerta");
 
                 }else {

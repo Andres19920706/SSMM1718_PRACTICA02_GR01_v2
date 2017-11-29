@@ -9,8 +9,7 @@
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/background_wel">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/titule_welcome"
@@ -45,8 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="88dp"
             android:layout_marginEnd="29dp"
-            android:layout_marginRight="29dp"
-            android:src="@mipmap/andomus_logo" />
+            android:layout_marginRight="29dp" />
 
 
     </RelativeLayout>
