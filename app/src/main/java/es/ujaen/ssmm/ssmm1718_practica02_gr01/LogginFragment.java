@@ -48,6 +48,7 @@ public class LogginFragment extends Fragment {
     private static final short PORTDEFUAL = 8080;
     public static SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "PreferenciasAnDomus" ;
+    public static final String MyPREFERENCES2 = "IntentosDeLoggin" ;
     public static final String SESSIONID = "sessionID";
     public static final String SESSIONEXPIRED = "sessionExpired";
     public static final String SHUSER = "usuario";
@@ -255,13 +256,25 @@ public class LogginFragment extends Fragment {
                         editor.putString(SESSIONEXPIRED, sessionExpired);
                         editor.putString(SESSIONID, sessionID);
                         editor.commit();
+//TODO respuesta ok
 
+                        //resultado
                         resul = "OK"; //Si se ha recibido correctamente
                     }
+
 
                 }
             }
             Log.e("AnDomus","Resultado: "+resul);
+            sharedpreferences =  getActivity().getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
+            //
+            SharedPreferences sharedpreferences2 = getActivity().getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences2.edit();
+            editor = sharedpreferences2.edit();
+            editor.putString(SHUSER, sharedpreferences.getString(SHUSER, ""));
+            editor.putString(SESSIONID, resul);
+            editor.commit();
+
             return resul;
         }
 
