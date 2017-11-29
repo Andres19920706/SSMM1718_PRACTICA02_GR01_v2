@@ -201,15 +201,16 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
             //Intentos Fallidos
-            sharedpreferences =  getSharedPreferences(MyPREFERENCES2,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
-            //
-            FragmentManager fm = getFragmentManager();
-            String txt = "";
-            while(){
-                txt ="SOp: "+sharedpreferences.getString(SHUSER, "")+" value: "+sharedpreferences.getString(SESSIONID, "";
-            }
-            DialogoAlerta alerta = new DialogoAlerta();
-            alerta.show(fm, "aviso");
+//            sharedpreferences =  getSharedPreferences(MyPREFERENCES2,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
+//            //
+//            FragmentManager fm = getFragmentManager();
+//            String txt = "";
+//            while(){
+//                txt ="SOp: "+sharedpreferences.getString(SHUSER, "")+" value: "+sharedpreferences.getString(SESSIONID, "";
+//            }
+//            DialogoAlerta alerta = new DialogoAlerta();
+            //Prueba commint and phus
+//            alerta.show(fm, "aviso");
 
 
         } else if (id == R.id.nav_slideshow) {
