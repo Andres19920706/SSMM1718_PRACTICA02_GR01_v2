@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="es.ujaen.ssmm.ssmm1718_practica02_gr01.WelcomenFragment"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:id="@+id/FRAGMENT_WELCOMEN">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout

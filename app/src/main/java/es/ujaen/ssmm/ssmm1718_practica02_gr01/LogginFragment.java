@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.lang.NumberFormatException;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import static java.lang.String.*;
@@ -52,10 +54,9 @@ public class LogginFragment extends Fragment {
     public static final String SESSIONID = "sessionID";
     public static final String SESSIONEXPIRED = "sessionExpired";
     public static final String SHUSER = "usuario";
-    public static final String SHPASS = "clave";
     public static final String SHIP = "direccionIP";
     public static final String SHPORT = "puerto";
-
+    public static final String SREGISTER = "registro";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -150,6 +151,8 @@ public class LogginFragment extends Fragment {
                         DIALOGO = new DialogoAlerta("IP errónea.");
                     }else{
                         Log.e("AnDomus", "Campos Vacios o incorrectos ");
+                        DIALOGO = new DialogoAlerta("Campos Vacios o incorrectos ");
+
                     }
                     DIALOGO.show(FM, "tagAlerta");
 
@@ -174,9 +177,6 @@ public class LogginFragment extends Fragment {
                 }
             }
         });
-
-
-
 
         return fragment;
     }
@@ -266,13 +266,22 @@ public class LogginFragment extends Fragment {
                 }
             }
             Log.e("AnDomus","Resultado: "+resul);
+            //Datos precompartidos.
+                //Datos correspondientes al usuario actual
             sharedpreferences =  getActivity().getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
-            //
+                //Datos correspondientes al historial de autenticación
             SharedPreferences sharedpreferences2 = getActivity().getSharedPreferences(MyPREFERENCES2, Context.MODE_PRIVATE);
+            String txt1 = sharedpreferences2.getString(SREGISTER, "");
+            String txt2 = "";
+            //Obtenemos la fecha (momento en que se ha intentado hacer un loggin)
+            Date fechaDat = new Date();
+            SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
+            String fechaStr = formateador.format(fechaDat);
+            //Agregamos los campos al registro de loggin
             SharedPreferences.Editor editor = sharedpreferences2.edit();
             editor = sharedpreferences2.edit();
-            editor.putString(SHUSER, sharedpreferences.getString(SHUSER, ""));
-            editor.putString(SESSIONID, resul);
+            txt2 = "\n Fecha: "+fechaStr+" Usuario: "+sharedpreferences.getString(SHUSER, "")+" Resultado= "+resul;
+            editor.putString(SREGISTER,txt1+txt2);
             editor.commit();
 
             return resul;

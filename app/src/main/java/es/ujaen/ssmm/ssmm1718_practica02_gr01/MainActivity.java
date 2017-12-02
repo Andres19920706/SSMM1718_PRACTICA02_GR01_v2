@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity
     public static final String MyPREFERENCES2 = "IntentosDeLoggin" ;
     public static final String SESSIONID = "sessionID";
     public static final String SESSIONEXPIRED = "sessionExpired";
+    public static final String SREGISTER = "registro";
     public static final String SHUSER = "usuario";
+    public static final String SDATE = "fecha";
     public static final String SHPASS = "clave";
     public static final String SHIP = "direccionIP";
     public static final String SHPORT = "puerto";
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        DialogoAlerta alerta;
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cerrarSesion) {
             //Obtenemos los datos precompartidos
@@ -107,23 +109,32 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.clear();
                 editor.commit();
-                //Volvemos al inicio de la app.
-                WelcomenFragment fragment = new WelcomenFragment();
+
+                //Mostramos un cuadro de diálogo
+                alerta = new DialogoAlerta("Sesion cerrada");
+
+
+            }else{
+                //No hay sesion
+                //Mostramos un cuadro de diálogo
+                alerta = new DialogoAlerta("No hay sesion");
                 FragmentManager fm = getFragmentManager();
+
+            }
+            ////Volvemos al inicio de la app.
+            WelcomenFragment fragment = new WelcomenFragment();
+            FragmentManager fm = getFragmentManager();
+
+            if(fm.findFragmentById(R.id.FRAGMENT_WELCOMEN)!=null) {
+                //Estamos ya en WelcomenFragemnt
                 FragmentTransaction transaction = fm.beginTransaction();
                 transaction.replace(R.id.Contenedor, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-                //Mostramos un cuadro de diálogo
-                DialogoAlerta alerta = new DialogoAlerta("Sesion cerrada");
-                alerta.show(fm, "aviso");
-            }else{
-                //No hay sesion
-                //Mostramos un cuadro de diálogo
-                DialogoAlerta alerta = new DialogoAlerta("No hay sesion");
-                FragmentManager fm = getFragmentManager();
-                alerta.show(fm, "aviso");
             }
+            alerta.show(fm, "aviso");
+
+            //
             return true;
         }
 
@@ -135,7 +146,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+//TODO queda probar esto------
         if (id == R.id.nav_loggin) {
             // Handle the camera action
             Log.e("AnDomus","Cargando fragmento de bienvenida");
@@ -200,18 +211,20 @@ public class MainActivity extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_gallery) {
-            //Intentos Fallidos
-//            sharedpreferences =  getSharedPreferences(MyPREFERENCES2,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
-//            //
-//            FragmentManager fm = getFragmentManager();
-//            String txt = "";
-//            while(){
-//                txt ="SOp: "+sharedpreferences.getString(SHUSER, "")+" value: "+sharedpreferences.getString(SESSIONID, "";
-//            }
-//            DialogoAlerta alerta = new DialogoAlerta();
+            //Extremos los datos
+            sharedpreferences =  getSharedPreferences(MyPREFERENCES2,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
+            //
+            FragmentManager fm = getFragmentManager();
+            String txt = sharedpreferences.getString(SREGISTER, "");
+            if(!txt.equalsIgnoreCase("")) {
+                DialogoAlerta alerta = new DialogoAlerta(txt);
+                alerta.show(fm, "aviso");
+            }
+            else{
+                DialogoAlerta alerta = new DialogoAlerta("No hay registros");
+                alerta.show(fm, "aviso");
+            }
             //Prueba commint and phus
-//            alerta.show(fm, "aviso");
-
 
         } else if (id == R.id.nav_slideshow) {
 
