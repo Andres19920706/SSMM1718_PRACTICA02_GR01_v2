@@ -54,9 +54,11 @@ public class LogginFragment extends Fragment {
     public static final String SESSIONID = "sessionID";
     public static final String SESSIONEXPIRED = "sessionExpired";
     public static final String SHUSER = "usuario";
+    public static final String SHKEY = "clave";
     public static final String SHIP = "direccionIP";
     public static final String SHPORT = "puerto";
     public static final String SREGISTER = "registro";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -148,12 +150,15 @@ public class LogginFragment extends Fragment {
                         || s_ip.equalsIgnoreCase("")){
                     //Informamos al cliente del error
                     if(s_ip.equalsIgnoreCase("")){
-                        DIALOGO = new DialogoAlerta("IP errónea.");
+                        //Indicamos al usuario, que la dirección IP es errónea
+                        DIALOGO = new DialogoAlerta(getString(R.string.dialogo1_ipErronea));
                     }else{
+                        //Iindicamos al usuario, que los campos estan incompletos o son erróneos
                         Log.e("AnDomus", "Campos Vacios o incorrectos ");
-                        DIALOGO = new DialogoAlerta("Campos Vacios o incorrectos ");
+                        DIALOGO = new DialogoAlerta(getString(R.string.dialogo1_camposNull));
 
                     }
+                    //Mostramos el dialogo
                     DIALOGO.show(FM, "tagAlerta");
 
                 }else {
@@ -166,7 +171,6 @@ public class LogginFragment extends Fragment {
 
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(SHUSER, DATA.getUser());
-                    //editor.putString(SHPASS, DATA.getPass());
                     editor.putString(SHIP,DATA.getConnectionIP());
                     editor.putString(SHPORT, String.valueOf(DATA.getConnectionPort()));
                     editor.commit();
@@ -229,12 +233,16 @@ public class LogginFragment extends Fragment {
                 if (param.length >= 1) {
                     data = param[0];
                     //Log.e("AnDomus", "Los datos son " + data.getConnectionPort());
-                    publishProgress("Iniciando sesion");
+                    //publishProgress("Iniciando sesion");
+                    publishProgress(getString(R.string.tareaSincrona_InicioSesion));
+
+
                     //TODO proceso de autenticación
                     //Aqui me quedo, falta:
                     //Pasar actividad si esta correcto.
 
-                    String datosLogin = "usuario="+data.getUser()+"&clave="+data.getPass();
+                    //String datosLogin = "usuario="+data.getUser()+"&clave="+data.getPass();
+                    String datosLogin = SHUSER+"="+data.getUser()+"&"+SHKEY+"="+data.getPass();
                     PeticionPost peti = new PeticionPost(data.getConnectionIP(),data.getConnectionPort(),datosLogin);
 
                     Log.e("AnDomus","URL: "+peti.getDireccion());
@@ -275,12 +283,15 @@ public class LogginFragment extends Fragment {
             String txt2 = "";
             //Obtenemos la fecha (momento en que se ha intentado hacer un loggin)
             Date fechaDat = new Date();
-            SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-YYY HH:MM:ss");
             String fechaStr = formateador.format(fechaDat);
-            //Agregamos los campos al registro de loggin
+            //Agregamos los campos al registro de logginY
             SharedPreferences.Editor editor = sharedpreferences2.edit();
             editor = sharedpreferences2.edit();
-            txt2 = "\n Fecha: "+fechaStr+" Usuario: "+sharedpreferences.getString(SHUSER, "")+" Resultado= "+resul;
+            //txt2 = "Fecha: "+fechaStr+" Usuario: "+sharedpreferences.getString(SHUSER, "")+" Resultado= "+resul;
+            txt2 = getString(R.string.registro_Fecha)+": "+fechaStr+" "+
+                   getString(R.string.registro_User)+": "+sharedpreferences.getString(SHUSER, "")+" "
+                   +getString(R.string.registro_Resu)+": "+resul+"\n";
             editor.putString(SREGISTER,txt1+txt2);
             editor.commit();
 
@@ -333,7 +344,7 @@ public class LogginFragment extends Fragment {
                     new AlertDialog.Builder(getActivity());
 
             builder.setMessage(this.res)
-                    .setTitle("Información")
+                    .setTitle(getString(R.string.titulo_dialogo1))
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();

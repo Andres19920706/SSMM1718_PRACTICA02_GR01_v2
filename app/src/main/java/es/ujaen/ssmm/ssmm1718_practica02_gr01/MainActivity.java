@@ -42,11 +42,7 @@ public class MainActivity extends AppCompatActivity
     public static final String SESSIONID = "sessionID";
     public static final String SESSIONEXPIRED = "sessionExpired";
     public static final String SREGISTER = "registro";
-    public static final String SHUSER = "usuario";
-    public static final String SDATE = "fecha";
-    public static final String SHPASS = "clave";
-    public static final String SHIP = "direccionIP";
-    public static final String SHPORT = "puerto";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,18 +103,17 @@ public class MainActivity extends AppCompatActivity
                 //Hay sesion.
                 //Cerrar session (Limpiamos la lista de preferencias compartidas)
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.clear();
+                editor.putString(SESSIONID, "");
+                //editor.clear();
                 editor.commit();
 
                 //Mostramos un cuadro de diálogo
-                alerta = new DialogoAlerta("Sesion cerrada");
-
+                alerta = new DialogoAlerta(getString(R.string.dialogo1_sesionClose));
 
             }else{
                 //No hay sesion
                 //Mostramos un cuadro de diálogo
-                alerta = new DialogoAlerta("No hay sesion");
-                FragmentManager fm = getFragmentManager();
+                alerta = new DialogoAlerta(getString(R.string.dialogo1_sesionNull));
 
             }
             ////Volvemos al inicio de la app.
@@ -127,6 +122,7 @@ public class MainActivity extends AppCompatActivity
 
             if(fm.findFragmentById(R.id.FRAGMENT_WELCOMEN)!=null) {
                 //Estamos ya en WelcomenFragemnt
+
                 FragmentTransaction transaction = fm.beginTransaction();
                 transaction.replace(R.id.Contenedor, fragment);
                 transaction.addToBackStack(null);
@@ -134,7 +130,6 @@ public class MainActivity extends AppCompatActivity
             }
             alerta.show(fm, "aviso");
 
-            //
             return true;
         }
 
@@ -147,7 +142,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 //TODO queda probar esto------
-        if (id == R.id.nav_loggin) {
+        if (id == R.id.nav_welcomen){
+            WelcomenFragment fragment = new WelcomenFragment();
+            FragmentManager fm = getFragmentManager();
+
+            if(fm.findFragmentById(R.id.FRAGMENT_WELCOMEN)==null) {
+                //Cambimos al fragmento de Welcomen
+
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.Contenedor, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }else if (id == R.id.nav_loggin) {
             // Handle the camera action
             Log.e("AnDomus","Cargando fragmento de bienvenida");
             LogginFragment fragment = new LogginFragment();
@@ -210,30 +217,59 @@ public class MainActivity extends AppCompatActivity
                 startActivity(nueva);
             }
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_registrer) {
             //Extremos los datos
             sharedpreferences =  getSharedPreferences(MyPREFERENCES2,Context.MODE_PRIVATE); //Para extraer el nombre de usuario
-            //
-            FragmentManager fm = getFragmentManager();
-            String txt = sharedpreferences.getString(SREGISTER, "");
+
+            FragmentManager fm = getFragmentManager();//Obtenemos el fragmento pintado
+            String txt = sharedpreferences.getString(SREGISTER, "");//Cargamos los datos almacenados en MyPREFERENCES2
             if(!txt.equalsIgnoreCase("")) {
-                DialogoAlerta alerta = new DialogoAlerta(txt);
-                alerta.show(fm, "aviso");
+                //Cambiamos de fragmento, para mostrar los listos de registro
+                RegistroFragment fragment = new RegistroFragment();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.Contenedor, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
             else{
-                DialogoAlerta alerta = new DialogoAlerta("No hay registros");
+                //Indicamos al usuario que no hay lista de registros
+                DialogoAlerta alerta = new DialogoAlerta(getString(R.string.dialogo1_noRegistro));
                 alerta.show(fm, "aviso");
             }
-            //Prueba commint and phus
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_delete) {
+            //Borrar los datos del usuario
+            SharedPreferences sharedpreferences = getSharedPreferences(this.MyPREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.clear();
+            editor.commit();
+            //Borramos los datos del registro
+            sharedpreferences = getSharedPreferences(this.MyPREFERENCES2, Context.MODE_PRIVATE);
+            editor = sharedpreferences.edit();
+            editor.clear();
+            editor.commit();
 
-        } else if (id == R.id.nav_manage) {
+            //Cambiamos de fragmento
+            WelcomenFragment fragment = new WelcomenFragment();
+            FragmentManager fm = getFragmentManager();
 
-        } else if (id == R.id.nav_share) {
+            if(fm.findFragmentById(R.id.FRAGMENT_WELCOMEN)==null) {
+                //Cambimos al fragmento de Welcomen
+
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.Contenedor, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+            //Informamos al usuario de la operación
+            DialogoAlerta dialogo = new DialogoAlerta("Datos obrrados con éxito");
+            dialogo.show(fm, "aviso");
 
         } else if (id == R.id.nav_send) {
-
+            FragmentManager fm = getFragmentManager();
+            DialogoAlerta dialogo = new DialogoAlerta("AnDomus aplicación Android \n Version 1.0");
+            dialogo.show(fm,"aviso");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -255,7 +291,7 @@ public class MainActivity extends AppCompatActivity
                     new AlertDialog.Builder(getActivity());
 
             builder.setMessage(this.res)
-                    .setTitle("Información")
+                    .setTitle(getString(R.string.titulo_dialogo1))
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();

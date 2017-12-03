@@ -23,5 +23,35 @@
     <string name="titule_welcome">Bienvenido a AnDomus.</string>
     <string name="description_welcome">Al alcance de un solo click</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- String de Fragement Registro -->
+    <string name="fragment_registro_description">Lista de acceso.</string>
+
+    <!-- Palabras clave para la lista de acceso-->
+    <!-- Fecha: "+fechaStr+" Usuario: "+sharedpreferences.getString(SHUSER, "")+" Resultado= "+resul -->
+    <string name="registro_Fecha">Fecha</string>
+    <string name="registro_User">Usuario</string>
+    <string name="registro_Resu">Resultado</string>
+
+    <!-- Palabras clave para la tarea asincrona -->
+    <string name="tareaSincrona_InicioSesion">Iniciando sesión.</string>
+
+    <!-- Palabras clave para los dialogos -->
+    <string name="titulo_dialogo1">Información</string>
+    <string name="dialogo1_camposNull">Campos vacíos o incompletos</string>
+    <string name="dialogo1_ipErronea">Dirección IP errónea</string>
+    <string name="dialogo1_noRegistro">No hay registros</string>
+    <string name="dialogo1_sesionClose">Sesión cerrada</string>
+    <string name="dialogo1_sesionNull">No hay sesión</string>
+
+    <!-- Opciones del menú -->
+    <string name="menu1_opcionWelcomen">Bienvenido</string>
+    <string name="menu1_opcionLogin">Iniciar sesión</string>
+    <string name="menu1_opcionRegistros">Ver accesos</string>
+    <string name="menu1_borrarDatos">Limpiar datos</string>
+    <string name="menu1_acerdaDe">Acerda de</string>
+
 
 </resources>
